@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+    "settings": {
+        "colorTabs.tabBackground": true,
+        "colorTabs.titleBackground": false,
+        "colorTabs.titleLabel": true,
+        "colorTabs.config": [
+            {
+                "color": "#003F00",
+                "regex": "src/.*"
+            },
+            {
+                "color": "#3F0000",
+                "regex": "tests/.*"
+            }
+        ],
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/*.egg-info": true
+        },
+        "files.trimTrailingWhitespace": true,
+        "pylint.args": [
+            "--disable=trailing-whitespace",
+            "--max-line-length=79"
+        ],
+        "pylint.severity": {
+            "convention": "Error",
+            "error": "Error",
+            "fatal": "Error",
+            "info": "Error",
+            "refactor": "Error",
+            "warning": "Error"
+		}
+    }
+}
