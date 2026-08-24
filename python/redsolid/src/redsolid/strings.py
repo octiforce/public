@@ -340,7 +340,9 @@ def str_is_int(text: str, *, base: int | None = None) -> bool:
     return True
 
 
-def str_is_float(text: str, *, allow_non_finite: bool = True) -> bool:
+def str_is_float(
+        text: str, *, allow_non_finite: bool = True, allow_int: bool = False,
+) -> bool:
     """
     Determine if a string represents a float value.
 
@@ -348,7 +350,18 @@ def str_is_float(text: str, *, allow_non_finite: bool = True) -> bool:
     representations such as "-inf", "+inf", and "nan" are recognized as
     float values.  Otherwise, only finite floating-point values are
     recognized.
+
+    If allow_int is False (default), and the string represents a base-10
+    integer, then it will not be recognized as a floating-point value.
+    Set this option to True if ints should be accepted as floats.
     """
+    if not allow_int:
+        try:
+            int(text)
+        except ValueError:
+            pass
+        else:
+            return False
     try:
         value = float(text)
     except ValueError:
