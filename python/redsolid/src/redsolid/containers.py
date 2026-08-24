@@ -7,7 +7,7 @@ from collections.abc import (
     MutableMapping,
     MutableSequence,
     Sequence,
-    Set,
+    Set
 )
 from typing import Any, NoReturn, TypeVar, cast, overload, override
 
