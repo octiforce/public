@@ -1,7 +1,7 @@
 """Test"""
-from types import NoneType
-import math
 
+import math
+from types import NoneType
 
 from redsolid.strings import (
     str_cast,
