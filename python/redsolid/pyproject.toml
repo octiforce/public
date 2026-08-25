@@ -9,8 +9,17 @@ description = "Reusable Python libraries, utilities, and tools for software deve
 requires-python = ">=3.12"
 license = "MIT"
 authors = [
-    { name = "Brian Wilson" }
+    { name = "Brian D. Wilson" }
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1",
+    "pyright",
+]
