@@ -5,19 +5,6 @@
 		}
 	],
     "settings": {
-        "colorTabs.tabBackground": true,
-        "colorTabs.titleBackground": false,
-        "colorTabs.titleLabel": true,
-        "colorTabs.config": [
-            {
-                "color": "#003F00",
-                "regex": "src/.*"
-            },
-            {
-                "color": "#3F0000",
-                "regex": "tests/.*"
-            }
-        ],
         "files.exclude": {
             "**/__pycache__": true,
             "**/*.egg-info": true
