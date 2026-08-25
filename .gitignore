@@ -6,6 +6,7 @@
 __pycache__/
 dist/
 build/
+redsolid-0.*/
 *.code-workspace
 *.egg-info/
 *.py[cdoz]
