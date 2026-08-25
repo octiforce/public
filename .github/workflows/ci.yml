@@ -50,20 +50,24 @@ jobs:
 
       - name: Run mypy
         working-directory: python/redsolid
-        run: mypy --strict src/redsolid
+        run: mypy --strict src/redsolid tests
 
       - name: Run pycodestyle
         working-directory: python/redsolid
-        run: pycodestyle src/redsolid
+        run: pycodestyle src/redsolid tests
 
       - name: Run pydocstyle
         working-directory: python/redsolid
-        run: pydocstyle src/redsolid
+        run: pydocstyle src/redsolid tests
 
       - name: Run pylint
         working-directory: python/redsolid
-        run: pylint src/redsolid
+        run: pylint src/redsolid tests
 
       - name: Run pyright
         working-directory: python/redsolid
         run: pyright
+
+      - name: Run ruff
+        working-directory: python/redsolid
+        run: ruff check src/redsolid tests

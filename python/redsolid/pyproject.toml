@@ -18,6 +18,30 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+[tool.pydocstyle]
+convention = "pep257"
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "SIM",    # flake8-simplify
+    "PIE",    # flake8-pie
+    "RET",    # flake8-return
+    "RUF",    # Ruff-specific rules
+    "W505",   # docstring/comment line length
+]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 72
+
 [dependency-groups]
 dev = [
     "build",
@@ -27,4 +51,5 @@ dev = [
     "pylint",
     "pytest>=9.1",
     "pyright",
+    "ruff"
 ]
