@@ -1,11 +1,12 @@
-"""Test"""
+"""Tests for the redsolid.containers module."""
+# Lint: Docstrings are not required for test functions.
+# pylint: disable=missing-function-docstring
 
 
 from redsolid.containers import MappingView, SequenceView
 
 
 def test_mapping_view() -> None:
-    """Test"""
     entries = {"a": 1, "b": 2, "c": 3}
     view = MappingView(entries)
     assert len(view) == 3
@@ -27,7 +28,6 @@ def test_mapping_view() -> None:
 
 
 def test_sequence_view() -> None:
-    """Test"""
     items = [2, 4, 6, 8, 2]
     view = SequenceView(items)
     assert len(view) == 5

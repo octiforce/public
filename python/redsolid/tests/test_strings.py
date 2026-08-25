@@ -1,4 +1,7 @@
-"""Test"""
+"""Tests for the redsolid.strings module."""
+# Lint: Docstrings are not required for test functions.
+# pylint: disable=missing-function-docstring
+
 
 import math
 from types import NoneType
@@ -14,7 +17,6 @@ from redsolid.strings import (
 
 
 def test_str_is_none() -> None:
-    """Test"""
     assert str_is_none("None")
     assert str_is_none(" none ")
     assert str_is_none("Null")
@@ -29,7 +31,6 @@ def test_str_is_none() -> None:
 
 
 def test_str_is_bool() -> None:
-    """Test"""
     assert str_is_bool("True")
     assert str_is_bool(" true ")
     assert str_is_bool("False")
@@ -42,7 +43,6 @@ def test_str_is_bool() -> None:
 
 
 def test_str_is_int() -> None:
-    """Test"""
     assert str_is_int("+123")
     assert str_is_int(" -123 ", base=10)
     assert str_is_int("0b0101")
@@ -62,7 +62,6 @@ def test_str_is_int() -> None:
 
 
 def test_str_is_float() -> None:
-    """Test"""
     assert str_is_float("123.45")
     assert str_is_float("-12.345e+1")
     assert str_is_float("  +1234.5e-1")
@@ -80,7 +79,6 @@ def test_str_is_float() -> None:
 
 
 def test_str_type() -> None:
-    """Test"""
     assert str_type("None") is NoneType
     assert str_type("Null") is NoneType
     assert str_type("") is NoneType
@@ -98,7 +96,6 @@ def test_str_type() -> None:
 
 
 def test_str_cast() -> None:
-    """Test"""
     assert str_cast("None") is None
     assert str_cast("Null") is None
     assert str_cast("") is None
