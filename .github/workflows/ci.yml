@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Test on Python ${{ matrix.python-version }}
+    name: Test Using Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,3 +30,40 @@ jobs:
       - name: Run tests
         working-directory: python/redsolid
         run: python -m pytest
+
+  quality:
+    name: Check Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install package and development dependencies
+        working-directory: python/redsolid
+        run: python -m pip install --group dev -e .
+
+      - name: Run mypy
+        working-directory: python/redsolid
+        run: mypy --strict src/redsolid
+
+      - name: Run pycodestyle
+        working-directory: python/redsolid
+        run: pycodestyle src/redsolid
+
+      - name: Run pydocstyle
+        working-directory: python/redsolid
+        run: pydocstyle src/redsolid
+
+      - name: Run pylint
+        working-directory: python/redsolid
+        run: pylint src/redsolid
+
+      - name: Run pyright
+        working-directory: python/redsolid
+        run: pyright
