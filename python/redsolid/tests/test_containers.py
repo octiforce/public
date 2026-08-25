@@ -13,7 +13,7 @@ def test_mapping_view() -> None:
     assert view.get("b", 4) == 2
     assert view.get("d", 4) == 4
     assert entries.keys() == view.keys()
-    assert entries.values() == view.values()
+    assert tuple(entries.values()) == tuple(view.values())
     for key, value in view.items():
         assert entries[key] == value
 
@@ -42,5 +42,5 @@ def test_sequence_view() -> None:
     assert view[5] == 10
 
     del items[0]
-    assert len(view) == 6
+    assert len(view) == 5
     assert view[0] == 4
