@@ -22,4 +22,6 @@ testpaths = ["tests"]
 dev = [
     "pytest>=9.1",
     "pyright",
+    "pylint",
+    "pydocstyle",
 ]
