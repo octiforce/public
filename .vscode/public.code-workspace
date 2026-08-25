@@ -34,12 +34,6 @@
             "info": "Error",
             "refactor": "Error",
             "warning": "Error"
-        },
-        "workbench.colorCustomizations": {
-            "tab.activeBorder": "#003F00",
-            "tab.activeBackground": "#003F00",
-            "statusBar.background": "#003F00",
-            "statusBar.foreground": "#ffffff"
         }
     }
 }
