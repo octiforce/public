@@ -170,11 +170,10 @@ def str_to_list(
     """
     _validate_not_empty(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    items = [
+    return [
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     ]
-    return items
 
 
 def str_to_tuple(
@@ -198,11 +197,10 @@ def str_to_tuple(
     """
     _validate_not_empty(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    items = tuple(
+    return tuple(
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     )
-    return items
 
 
 def str_to_set(
@@ -227,11 +225,10 @@ def str_to_set(
     """
     _validate_not_empty(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    items = {
+    return {
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     }
-    return items
 
 
 def str_from_mapping(
@@ -454,11 +451,10 @@ def _get_item_strs(text: str, sep: str, strip: bool) -> Iterator[str]:
     Parsing depends on the separator and whether to apply stripping.
     """
     split_item_strs = (text.strip() if strip else text).split(sep)
-    item_strs = (
+    return (
         item_str.strip() if strip else item_str
         for item_str in split_item_strs
     )
-    return item_strs
 
 
 def _str_to_int(text: str, base: int | None) -> int:
