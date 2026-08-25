@@ -2,9 +2,10 @@
 
 
 from __future__ import annotations
+
+import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
-import math
 from types import NoneType
 from typing import Any, override
 

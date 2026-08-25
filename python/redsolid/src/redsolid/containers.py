@@ -2,6 +2,7 @@
 
 
 from __future__ import annotations
+
 from collections.abc import (
     Iterable,
     Iterator,
@@ -9,10 +10,9 @@ from collections.abc import (
     MutableMapping,
     MutableSequence,
     Sequence,
-    Set
+    Set,
 )
 from typing import Any, NoReturn, TypeVar, cast, overload, override
-
 
 _K = TypeVar("_K")
 """Invariant type variable for a mapping key."""
