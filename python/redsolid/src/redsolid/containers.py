@@ -1,5 +1,7 @@
 """Adapters and read-only views for common collection types."""
 
+
+from __future__ import annotations
 from collections.abc import (
     Iterable,
     Iterator,

@@ -1,6 +1,7 @@
 """String transformation and formatting solutions."""
 
 
+from __future__ import annotations
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 import math

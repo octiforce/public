@@ -110,6 +110,9 @@ def test_str_cast() -> None:
     assert str_cast("37bf") == "37bf"
     assert str_cast("37bf", int_base=16) == 14271
     assert str_cast("12.345") == 12.345
-    assert math.isnan(str_cast("NaN"))
-    assert str_cast("NaN", allow_non_finite_float=False) == "NaN"
     assert str_cast("xyz") == "xyz"
+
+    result = str_cast("NaN")
+    assert isinstance(result, float)
+    assert math.isnan(result)
+    assert str_cast("NaN", allow_non_finite_float=False) == "NaN"
