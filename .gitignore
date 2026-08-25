@@ -2,5 +2,5 @@
 .vscode/
 __pycache__/
 *.code-workspace
-*.egg-info
+*.egg-info/
 *.py[cdoz]
