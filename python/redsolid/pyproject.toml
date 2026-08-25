@@ -20,8 +20,10 @@ testpaths = ["tests"]
 
 [dependency-groups]
 dev = [
+    "mypy",
+    "pycodestyle",
+    "pydocstyle",
+    "pylint",
     "pytest>=9.1",
     "pyright",
-    "pylint",
-    "pydocstyle",
 ]
