@@ -6,11 +6,29 @@ build-backend = "setuptools.build_meta"
 name = "redsolid"
 version = "0.1.0"
 description = "Reusable Python libraries, utilities, and tools for software development."
+readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [
     { name = "Brian D. Wilson" }
 ]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/octiforce/public"
+Repository = "https://github.com/octiforce/public/tree/main/python/redsolid"
+Issues = "https://github.com/octiforce/public/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
