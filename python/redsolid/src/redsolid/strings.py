@@ -12,7 +12,7 @@ from typing import Any, override
 
 class Indenter:
     """
-    Indents strings and tracks indentation level for tree-like output.
+    Indents strings and tracks indentation level for nested output.
 
     Indenters are initialized with default indenting step text (4 spaces
     unless specified).  The push() and pop() methods add or remove one
