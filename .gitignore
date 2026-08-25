@@ -1,6 +1,10 @@
 # Git will ignore these files and folders.
+.mypy_cache/
+.pytest_cache/
 .vscode/
 __pycache__/
+dist/
+build/
 *.code-workspace
 *.egg-info/
 *.py[cdoz]

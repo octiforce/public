@@ -20,6 +20,7 @@ testpaths = ["tests"]
 
 [dependency-groups]
 dev = [
+    "build",
     "mypy",
     "pycodestyle",
     "pydocstyle",
