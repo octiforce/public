@@ -176,7 +176,7 @@ def str_to_list(
 
 
 def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any],
+        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
         strip: bool = True
 ) -> list[Any]:
     """
