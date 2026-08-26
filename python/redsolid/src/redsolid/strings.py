@@ -207,7 +207,7 @@ def str_to_tuple(
         text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
         strip: bool = True
 ) -> tuple[str]:
-    """Convert a simple separated string into a list."""
+    """Convert a simple separated string into a tuple."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
@@ -217,7 +217,7 @@ def str_to_tuple(
         text: str, *, sep: str = "\n", converter: Callable[[str], _T],
         strip: bool = True
 ) -> tuple[_T]:
-    """Convert a simple separated string into a list."""
+    """Convert a simple separated string into a tuple."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
@@ -254,7 +254,7 @@ def str_to_set(
         text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
         strip: bool = True
 ) -> set[str]:
-    """Convert a simple separated string into a list."""
+    """Convert a simple separated string into a set."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
@@ -264,7 +264,7 @@ def str_to_set(
         text: str, *, sep: str = "\n", converter: Callable[[str], _T],
         strip: bool = True
 ) -> set[_T]:
-    """Convert a simple separated string into a list."""
+    """Convert a simple separated string into a set."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
@@ -312,13 +312,61 @@ def str_from_mapping(
     return sep.join(f"{key}{link}{value}" for key, value in items.items())
 
 
+@overload
 # Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
 def str_to_dict(
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], _K] = str,
-    value_converter: Callable[[str], _T] = str, strip: bool = True
+    key_converter: Callable[[str], str] = str,
+    value_converter: Callable[[str], str] = str, strip: bool = True
+) -> dict[str, str]:
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+# Lint: Larger number of arguments is required for this method.
+# pylint: disable=too-many-arguments
+def str_to_dict(
+    text: str, *, sep: str = "\n", link: str = ":",
+    key_converter: Callable[[str], str] = str,
+    value_converter: Callable[[str], _T], strip: bool = True
+) -> dict[str, _T]:
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+# Lint: Larger number of arguments is required for this method.
+# pylint: disable=too-many-arguments
+def str_to_dict(
+    text: str, *, sep: str = "\n", link: str = ":",
+    key_converter: Callable[[str], _K],
+    value_converter: Callable[[str], str] = str, strip: bool = True
+) -> dict[_K, str]:
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+# Lint: Larger number of arguments is required for this method.
+# pylint: disable=too-many-arguments
+def str_to_dict(
+    text: str, *, sep: str = "\n", link: str = ":",
+    key_converter: Callable[[str], _K], value_converter: Callable[[str], _T],
+    strip: bool = True
 ) -> dict[_K, _T]:
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+# Lint: Larger number of arguments is required for this method.
+# pylint: disable=too-many-arguments
+def str_to_dict(
+    text: str, *, sep: str = "\n", link: str = ":",
+    key_converter: Callable[[str], Any] = str,
+    value_converter: Callable[[str], Any] = str, strip: bool = True
+) -> dict[Any, Any]:
     """
     Convert a simple separated string into a dict.
 
@@ -342,7 +390,7 @@ def str_to_dict(
     """
     _validate_not_empty(sep, link)
     item_strs = _get_item_strs(text, sep, strip)
-    items: dict[_K, _T] = {}
+    items: dict[Any, Any] = {}
     for item_str in item_strs:
         if not item_str and strip:
             continue
