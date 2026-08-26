@@ -219,6 +219,7 @@ def str_to_dict(
     key_converter: Callable[[str], str] = str,
     value_converter: Callable[[str], str] = str, strip: bool = True
 ) -> dict[str, str]:
+    """Convert a simple separated string into a dict."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
