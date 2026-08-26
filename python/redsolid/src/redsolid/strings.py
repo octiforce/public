@@ -7,7 +7,7 @@ import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from types import NoneType
-from typing import Any, TypeVar, override
+from typing import Any, TypeVar, overload, override
 
 
 _K = TypeVar("_K")
@@ -155,10 +155,30 @@ def str_from_iterable(items: Iterable[Any], *, sep: str = "\n") -> str:
     return sep.join(str(item) for item in items)
 
 
+@overload
 def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
+        strip: bool = True
+) -> list[str]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+def str_to_list(
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
         strip: bool = True
 ) -> list[_T]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+def str_to_list(
+        text: str, *, sep: str = "\n", converter: Callable[[str], object],
+        strip: bool = True
+) -> list[object]:
     """
     Convert a simple separated string into a list.
 
@@ -180,6 +200,26 @@ def str_to_list(
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     ]
+
+
+@overload
+def str_to_tuple(
+        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
+        strip: bool = True
+) -> tuple[str]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+def str_to_tuple(
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
+        strip: bool = True
+) -> tuple[_T]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
 
 def str_to_tuple(
@@ -207,6 +247,26 @@ def str_to_tuple(
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     )
+
+
+@overload
+def str_to_set(
+        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
+        strip: bool = True
+) -> set[str]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
+
+
+@overload
+def str_to_set(
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
+        strip: bool = True
+) -> set[_T]:
+    """Convert a simple separated string into a list."""
+    # Lint: Overloads require a docstring and an ellipsis.
+    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
 
 def str_to_set(

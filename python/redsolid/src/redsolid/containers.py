@@ -87,13 +87,13 @@ class SequenceView(Sequence[_T_co]):
     @overload
     def __getitem__(self, key: int) -> _T_co:
         """Get the item at the specified index."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
     def __getitem__(self, key: slice) -> SequenceView[_T_co]:
         """Get a SequenceView over the specified slice."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @override
@@ -340,13 +340,13 @@ class FixedLengthSequenceAdapter(MutableSequence[_T]):
     @overload
     def __delitem__(self, key: int) -> None:
         """Not supported by this class to preserve fixed length."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
     def __delitem__(self, key: slice) -> None:
         """Not supported by this class to preserve fixed length."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @override
@@ -361,13 +361,13 @@ class FixedLengthSequenceAdapter(MutableSequence[_T]):
     @overload
     def __getitem__(self, key: int) -> _T:
         """Get the item at the specified index."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
     def __getitem__(self, key: slice) -> MutableSequence[_T]:
         """Get a MutableSequence over the specified slice."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @override
@@ -388,13 +388,13 @@ class FixedLengthSequenceAdapter(MutableSequence[_T]):
     @overload
     def __setitem__(self, key: int, value: _T) -> None:
         """Replace the item at the specified index."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
     def __setitem__(self, key: slice, value: Iterable[_T]) -> None:
         """Replace items over a specified slice."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @override
@@ -494,7 +494,7 @@ class FixedSizeGrid(SequenceView[FixedLengthSequenceAdapter[_T]]):
     @overload
     def __getitem__(self, key: int) -> FixedLengthSequenceAdapter[_T]:
         """Get the row at the specified index."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
@@ -502,13 +502,13 @@ class FixedSizeGrid(SequenceView[FixedLengthSequenceAdapter[_T]]):
             self, key: slice
     ) -> SequenceView[FixedLengthSequenceAdapter[_T]]:
         """Get a SequenceView of rows based on the specified slice."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @overload
     def __getitem__(self, key: CellOffset) -> _T:
         """Get the value at the specified cell offset."""
-        # Lint: Needs both docstring (pydocstyle) and ... for overload.
+        # Lint: Overloads require a docstring and an ellipsis.
         ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
     @override
