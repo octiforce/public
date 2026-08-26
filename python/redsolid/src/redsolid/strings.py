@@ -199,14 +199,6 @@ def str_to_list(
 def str_from_mapping(
         items: Mapping[Any, Any], *, sep: str = "\n", link: str = ":"
 ) -> str:
-    """
-    Convert any Mapping into a simple separated string.
-
-    The returned string contains all key/value entries converted to
-    strings.  Each key and value is separated by a link string
-    (default is ":"), then each entry is separated by a separator
-    string (default is newline).
-    """
     _validate_not_empty(sep, link)
     return sep.join(f"{key}{link}{value}" for key, value in items.items())
 
@@ -219,7 +211,6 @@ def str_to_dict(
     key_converter: Callable[[str], str] = str,
     value_converter: Callable[[str], str] = str, strip: bool = True
 ) -> dict[str, str]:
-    """Convert a simple separated string into a dict."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
 
