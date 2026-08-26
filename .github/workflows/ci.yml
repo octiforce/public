@@ -54,11 +54,11 @@ jobs:
 
       - name: Run pycodestyle
         working-directory: python/redsolid
-        run: pycodestyle --add-ignore=D103 src/redsolid tests
+        run: pycodestyle src/redsolid tests
 
       - name: Run pydocstyle
         working-directory: python/redsolid
-        run: pydocstyle src/redsolid tests
+        run: pydocstyle --add-ignore=D103 src/redsolid tests
 
       - name: Run pylint
         working-directory: python/redsolid
