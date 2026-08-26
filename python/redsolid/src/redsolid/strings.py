@@ -7,13 +7,7 @@ import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from types import NoneType
-from typing import Any, TypeVar, overload, override
-
-
-_K = TypeVar("_K")
-"""Invariant type variable for a mutable mapping key."""
-_T = TypeVar("_T")
-"""Invariant type variable for a mutable value."""
+from typing import Any, overload, override
 
 
 class Indenter:
@@ -166,10 +160,10 @@ def str_to_list(
 
 
 @overload
-def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
+def str_to_list[T](
+        text: str, *, sep: str = "\n", converter: Callable[[str], T],
         strip: bool = True
-) -> list[_T]:
+) -> list[T]:
     """Convert a simple separated string into a list."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
@@ -200,101 +194,6 @@ def str_to_list(
         converter(item_str) for item_str in item_strs
         if item_str != "" or not strip
     ]
-
-
-@overload
-def str_to_tuple(
-        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
-        strip: bool = True
-) -> tuple[str]:
-    """Convert a simple separated string into a tuple."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
-def str_to_tuple(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
-        strip: bool = True
-) -> tuple[_T]:
-    """Convert a simple separated string into a tuple."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-def str_to_tuple(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
-        strip: bool = True
-) -> tuple[Any, ...]:
-    """
-    Convert a simple separated string into a tuple.
-
-    The returned tuple contains all items extracted from the string,
-    delimited by a separator (default is newline).
-
-    Each item is converted with the specified converter, which
-    defaults to str.  The converter can be any callable that accepts
-    a single string argument, including basic types such as bool,
-    float, and int.
-
-    If strip is set to True (default), then whitespace is stripped
-    from before and after each item, and any items that are empty
-    after stripping are ignored.
-    """
-    _validate_not_empty(sep)
-    item_strs = _get_item_strs(text, sep, strip)
-    return tuple(
-        converter(item_str) for item_str in item_strs
-        if item_str != "" or not strip
-    )
-
-
-@overload
-def str_to_set(
-        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
-        strip: bool = True
-) -> set[str]:
-    """Convert a simple separated string into a set."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
-def str_to_set(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T],
-        strip: bool = True
-) -> set[_T]:
-    """Convert a simple separated string into a set."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-def str_to_set(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
-        strip: bool = True
-) -> set[Any]:
-    """
-    Convert a simple separated string into a set.
-
-    The returned set contains all items extracted from the string,
-    delimited by a separator (default is newline).  Like any set,
-    duplicate items are removed.
-
-    Each item is converted with the specified converter, which
-    defaults to str.  The converter can be any callable that accepts
-    a single string argument, including basic types such as bool,
-    float, and int.
-
-    If strip is set to True (default), then whitespace is stripped
-    from before and after each item, and any items that are empty
-    after stripping are ignored.
-    """
-    _validate_not_empty(sep)
-    item_strs = _get_item_strs(text, sep, strip)
-    return {
-        converter(item_str) for item_str in item_strs
-        if item_str != "" or not strip
-    }
 
 
 def str_from_mapping(
@@ -328,11 +227,11 @@ def str_to_dict(
 @overload
 # Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
-def str_to_dict(
+def str_to_dict[T](
     text: str, *, sep: str = "\n", link: str = ":",
     key_converter: Callable[[str], str] = str,
-    value_converter: Callable[[str], _T], strip: bool = True
-) -> dict[str, _T]:
+    value_converter: Callable[[str], T], strip: bool = True
+) -> dict[str, T]:
     """Convert a simple separated string into a dict."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
@@ -341,11 +240,11 @@ def str_to_dict(
 @overload
 # Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
-def str_to_dict(
+def str_to_dict[K, T](
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], _K], value_converter: Callable[[str], _T],
+    key_converter: Callable[[str], K], value_converter: Callable[[str], T],
     strip: bool = True
-) -> dict[_K, _T]:
+) -> dict[K, T]:
     """Convert a simple separated string into a dict."""
     # Lint: Overloads require a docstring and an ellipsis.
     ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
