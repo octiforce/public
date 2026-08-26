@@ -176,9 +176,9 @@ def str_to_list(
 
 
 def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], object],
+        text: str, *, sep: str = "\n", converter: Callable[[str], Any],
         strip: bool = True
-) -> list[object]:
+) -> list[Any]:
     """
     Convert a simple separated string into a list.
 
