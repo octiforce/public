@@ -223,9 +223,9 @@ def str_to_tuple(
 
 
 def str_to_tuple(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
         strip: bool = True
-) -> tuple[_T, ...]:
+) -> tuple[Any, ...]:
     """
     Convert a simple separated string into a tuple.
 
@@ -270,9 +270,9 @@ def str_to_set(
 
 
 def str_to_set(
-        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
         strip: bool = True
-) -> set[_T]:
+) -> set[Any]:
     """
     Convert a simple separated string into a set.
 
