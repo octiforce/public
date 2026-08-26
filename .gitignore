@@ -1,12 +1,18 @@
-# Git will ignore these files and folders.
-.mypy_cache/
-.pytest_cache/
-.ruff_cache/
-.vscode/
-__pycache__/
-dist/
-build/
-redsolid-0.*/
-*.code-workspace
-*.egg-info/
-*.py[cdoz]
+# .gitignore
+
+# Git will ignore these matching folders and files.
+# All paths are relative to the folder that contains .gitignore.
+# One asterisk * matches any part of a single path component.
+# Two asterisks ** match directories recursively.
+/.vscode/
+
+/python/*/.mypy_cache/
+/python/*/.pytest_cache/
+/python/*/.ruff_cache/
+/python/*/dist/
+/python/*/build/
+/python/*/src/*.egg-info/
+/python/**/__pycache__/
+/python/**/*.py[cdoz]
+
+/python/redsolid/redsolid-*/
