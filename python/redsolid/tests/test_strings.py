@@ -8,12 +8,34 @@ from types import NoneType
 
 from redsolid.strings import (
     str_cast,
+    str_from_iterable,
+    str_from_mapping,
     str_is_bool,
     str_is_float,
     str_is_int,
     str_is_none,
     str_type,
 )
+
+
+def test_str_from_iterable() -> None:
+    test_list = [1, 2, 3]
+    test_tuple = ("a", "b", "c")
+    test_set = {None, True, 6, 4.5, "xyz"}
+    assert str_from_iterable(test_list) == "1\n2\n3"
+    assert str_from_iterable(test_list, sep=", ") == "1, 2, 3"
+    assert str_from_iterable(test_tuple) == "a\nb\nc"
+    assert str_from_iterable(test_tuple, sep=", ") == "a, b, c"
+    assert str_from_iterable(test_set) == "None\nTrue\n6\n4.5\nxyz"
+    assert str_from_iterable(test_set, sep=", ") == "None, True, 6, 4.5, xyz"
+
+
+def test_str_from_mapping() -> None:
+    test_dict = {"n": None, "b": True, "i": 6, "f": 4.5, "s": "xyz"}
+    assert str_from_mapping(test_dict) == "n:None\nb:True\ni:6\nf:4.5\ns:xyz"
+    assert str_from_mapping(test_dict, sep=", ", link=" -> ") == (
+        "n -> None, b -> True, i -> 6, f -> 4.5, s -> xyz"
+    )
 
 
 def test_str_is_none() -> None:
