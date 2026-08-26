@@ -7,7 +7,13 @@ import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from types import NoneType
-from typing import Any, override
+from typing import Any, TypeVar, override
+
+
+_K = TypeVar("_K")
+"""Invariant type variable for a mutable mapping key."""
+_T = TypeVar("_T")
+"""Invariant type variable for a mutable value."""
 
 
 class Indenter:
@@ -150,9 +156,9 @@ def str_from_iterable(items: Iterable[Any], *, sep: str = "\n") -> str:
 
 
 def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
         strip: bool = True
-) -> list[Any]:
+) -> list[_T]:
     """
     Convert a simple separated string into a list.
 
@@ -177,9 +183,9 @@ def str_to_list(
 
 
 def str_to_tuple(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
         strip: bool = True
-) -> tuple[Any, ...]:
+) -> tuple[_T, ...]:
     """
     Convert a simple separated string into a tuple.
 
@@ -204,9 +210,9 @@ def str_to_tuple(
 
 
 def str_to_set(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
+        text: str, *, sep: str = "\n", converter: Callable[[str], _T] = str,
         strip: bool = True
-) -> set[Any]:
+) -> set[_T]:
     """
     Convert a simple separated string into a set.
 
@@ -246,13 +252,13 @@ def str_from_mapping(
     return sep.join(f"{key}{link}{value}" for key, value in items.items())
 
 
-# Lint: Larger number of arguments needed for this method.
+# Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
 def str_to_dict(
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], Any] = str,
-    value_converter: Callable[[str], Any] = str, strip: bool = True
-) -> dict[Any, Any]:
+    key_converter: Callable[[str], _K] = str,
+    value_converter: Callable[[str], _T] = str, strip: bool = True
+) -> dict[_K, _T]:
     """
     Convert a simple separated string into a dict.
 
@@ -276,7 +282,7 @@ def str_to_dict(
     """
     _validate_not_empty(sep, link)
     item_strs = _get_item_strs(text, sep, strip)
-    items: dict[Any, Any] = {}
+    items: dict[_K, _T] = {}
     for item_str in item_strs:
         if not item_str and strip:
             continue

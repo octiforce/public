@@ -15,11 +15,11 @@ from collections.abc import (
 from typing import Any, NoReturn, TypeVar, cast, overload, override
 
 _K = TypeVar("_K")
-"""Invariant type variable for a mapping key."""
+"""Invariant type variable for a mutable mapping key."""
 _T_co = TypeVar("_T_co", covariant=True)
-"""Covariant (read-only) type variable for a value."""
+"""Covariant type variable for a read-only value."""
 _T = TypeVar("_T")
-"""Invariant (mutable) type variable for a value."""
+"""Invariant type variable for a mutable value."""
 
 
 class MappingView(Mapping[_K, _T_co]):
