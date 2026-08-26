@@ -341,18 +341,6 @@ def str_to_dict(
 # pylint: disable=too-many-arguments
 def str_to_dict(
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], _K],
-    value_converter: Callable[[str], str] = str, strip: bool = True
-) -> dict[_K, str]:
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
-# Lint: Larger number of arguments is required for this method.
-# pylint: disable=too-many-arguments
-def str_to_dict(
-    text: str, *, sep: str = "\n", link: str = ":",
     key_converter: Callable[[str], _K], value_converter: Callable[[str], _T],
     strip: bool = True
 ) -> dict[_K, _T]:
