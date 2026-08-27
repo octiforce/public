@@ -190,10 +190,14 @@ def str_to_list(
     """
     _validate_not_empty(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    return [
-        converter(item_str) for item_str in item_strs
-        if item_str != "" or not strip
-    ]
+    items: list[Any] = []
+    for item_str in item_strs:
+        if item_str != "" or not strip:
+            if converter is not bool:
+                items.append(converter(item_str))
+            else:
+                items.append(item_str.lower() == "true")
+    return items
 
 
 def str_from_mapping(
