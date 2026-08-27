@@ -14,6 +14,7 @@ from redsolid.strings import (
     str_is_float,
     str_is_int,
     str_is_none,
+    str_to_list,
     str_type,
 )
 
@@ -27,6 +28,22 @@ def test_str_from_iterable() -> None:
     assert str_from_iterable(test_tuple, sep=", ") == (
         "None, True, 6, 4.5, xyz"
     )
+
+
+def test_str_to_list() -> None:
+    assert str_to_list("None\nTrue\n6\n4.5\nxyz") == [
+        "None", "True", "6", "4.5", "xyz"
+    ]
+    assert str_to_list("True:False", sep=":", converter=bool) == [True, False]
+    assert str_to_list("1,2,3,5,8", sep=",", converter=int) == [
+        1, 2, 3, 5, 8
+    ]
+    assert str_to_list(" 1.25  2.5   3.75  ", sep=" ", converter=float) == [
+        1.25, 2.5, 3.75
+    ]
+    assert str_to_list(" abc , def , ghi ", sep=",") == ["abc", "def", "ghi"]
+    assert str_to_list(" abc , def , ghi ", sep=",", strip=False) == [
+        " abc ", " def ", " ghi "]
 
 
 def test_str_from_mapping() -> None:
