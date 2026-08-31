@@ -7,7 +7,7 @@ import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from types import NoneType
-from typing import Any, overload, override
+from typing import Any, override
 
 
 class Indenter:
@@ -149,30 +149,10 @@ def str_from_iterable(items: Iterable[Any], *, sep: str = "\n") -> str:
     return sep.join(str(item) for item in items)
 
 
-@overload
-def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], str] = str,
-        strip: bool = True
-) -> list[str]:
-    """Convert a simple separated string into a list."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
 def str_to_list[T](
-        text: str, *, sep: str = "\n", converter: Callable[[str], T],
-        strip: bool = True
+        text: str, *, sep: str = "\n",
+        converter: Callable[[str], T] | None = None, strip: bool = True
 ) -> list[T]:
-    """Convert a simple separated string into a list."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-def str_to_list(
-        text: str, *, sep: str = "\n", converter: Callable[[str], Any] = str,
-        strip: bool = True
-) -> list[Any]:
     """
     Convert a simple separated string into a list.
 
@@ -190,13 +170,10 @@ def str_to_list(
     """
     _validate_not_empty(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    items: list[Any] = []
+    items: list[T] = []
     for item_str in item_strs:
         if item_str != "" or not strip:
-            if converter is not bool:
-                items.append(converter(item_str))
-            else:
-                items.append(item_str.lower() == "true")
+            items.append(_convert_str(text, converter))
     return items
 
 
@@ -215,51 +192,12 @@ def str_from_mapping(
     return sep.join(f"{key}{link}{value}" for key, value in items.items())
 
 
-@overload
-# Lint: Larger number of arguments is required for this method.
-# pylint: disable=too-many-arguments
-def str_to_dict(
-    text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], str] = str,
-    value_converter: Callable[[str], str] = str, strip: bool = True
-) -> dict[str, str]:
-    """Convert a simple separated string into a dict."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
-# Lint: Larger number of arguments is required for this method.
-# pylint: disable=too-many-arguments
-def str_to_dict[T](
-    text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], str] = str,
-    value_converter: Callable[[str], T], strip: bool = True
-) -> dict[str, T]:
-    """Convert a simple separated string into a dict."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-@overload
 # Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
 def str_to_dict[K, T](
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], K], value_converter: Callable[[str], T],
-    strip: bool = True
-) -> dict[K, T]:
-    """Convert a simple separated string into a dict."""
-    # Lint: Overloads require a docstring and an ellipsis.
-    ...  # pylint: disable=unnecessary-ellipsis  # noqa: PIE790
-
-
-# Lint: Larger number of arguments is required for this method.
-# pylint: disable=too-many-arguments
-def str_to_dict(
-    text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], Any] = str,
-    value_converter: Callable[[str], Any] = str, strip: bool = True
+    key_converter: Callable[[str], K] | None = None,
+    value_converter: Callable[[str], T] | None = None, strip: bool = True
 ) -> dict[Any, Any]:
     """
     Convert a simple separated string into a dict.
@@ -284,7 +222,7 @@ def str_to_dict(
     """
     _validate_not_empty(sep, link)
     item_strs = _get_item_strs(text, sep, strip)
-    items: dict[Any, Any] = {}
+    items: dict[K, T] = {}
     for item_str in item_strs:
         if not item_str and strip:
             continue
@@ -298,9 +236,8 @@ def str_to_dict(
         if strip:
             key_str = key_str.strip()
             value_str = value_str.strip()
-        key = key_converter(key_str)
-        value = value_converter(value_str)
-        items[key] = value
+        key = _convert_str(key_str, key_converter)
+        items[key] = _convert_str(value_str, value_converter)
     return items
 
 
@@ -478,3 +415,20 @@ def _str_to_int(text: str, base: int | None) -> int:
         return int(text, 0)
     except ValueError:
         return int(text, 10)
+
+
+def _convert_str[T](text: str, converter: Callable[[str], T] | None) -> T:
+    """
+    Convert a string according to the specified converter.
+
+    If no converter is specified (None), the original string is
+    returned.  If the bool converter is specified, True is returned only
+    if the string is "true", ignoring case or any whitespace.  Otherwise
+    the specified type converter is applied and the converted value is
+    returned.
+    """
+    if converter is None:
+        return text
+    if converter is bool:
+        return text.strip().lower() == "true"
+    return converter(text)
