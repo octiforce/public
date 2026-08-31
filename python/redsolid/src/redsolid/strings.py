@@ -195,8 +195,8 @@ def str_from_mapping(
 # pylint: disable=too-many-arguments
 def str_to_dict(
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], Any] | None = None,
-    value_converter: Callable[[str], Any] | None = None, strip: bool = True
+    key_converter: Callable[[str], Any] = str,
+    value_converter: Callable[[str], Any] = str, strip: bool = True
 ) -> dict[Any, Any]:
     """
     Convert a simple separated string into a dict.
