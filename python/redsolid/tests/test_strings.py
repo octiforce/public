@@ -25,21 +25,9 @@ def test_str_to_list() -> None:
     assert str_to_list("None\nTrue\n6\n4.5\nxyz") == [
         "None", "True", "6", "4.5", "xyz"
     ]
-    #ssert str_to_list(" True : true: False: 0 ", sep=":", converter=bool) == [
-    #     True, True, False, False
-    # ]
-    #assert str_to_list(" 1,2,3, 5,8, 0xd, 0o25 ", sep=",", converter=int) == [
-    #     1, 2, 3, 5, 8, 13, 21
-    # ]
-    # assert str_to_list(
-    #     " 1,2,3, 5,8, 0xd, 0o25 ", sep=",", converter=int, strip=False
-    # ) == [1, 2, 3, 5, 8, 13, 21]
     assert str_to_list(" 1.25  2.5   3.75  1e2", sep=" ", converter=float) == [
         1.25, 2.5, 3.75, 100
     ]
-    #assert str_to_list(
-    #    " 1.25  2.5   3.75  1e2", sep=" ", converter=float, strip=False
-    #) == [1.25, 2.5, 3.75, 100]
     assert str_to_list(" abc , def , ghi ", sep=",") == ["abc", "def", "ghi"]
     assert str_to_list(" abc , def , ghi ", sep=",", strip=False) == [
         " abc ", " def ", " ghi "]
