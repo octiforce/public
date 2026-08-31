@@ -3,10 +3,8 @@
 
 from __future__ import annotations
 
-import math
 from collections.abc import Callable, Generator, Iterable, Iterator, Mapping
 from contextlib import contextmanager
-from types import NoneType
 from typing import Any, override
 
 
@@ -145,14 +143,14 @@ def str_from_iterable(items: Iterable[Any], *, sep: str = "\n") -> str:
     The returned string contains all items converted to strings,
     each separated by a separator string (default is newline).
     """
-    _validate_not_empty(sep)
+    _validate_sep_arg(sep)
     return sep.join(str(item) for item in items)
 
 
-def str_to_list[T](
+def str_to_list(
         text: str, *, sep: str = "\n",
-        converter: Callable[[str], T] | None = None, strip: bool = True
-) -> list[T]:
+        converter: Callable[[str], Any] = str, strip: bool = True
+) -> list[Any]:
     """
     Convert a simple separated string into a list.
 
@@ -168,12 +166,12 @@ def str_to_list[T](
     from before and after each item, and any items that are empty
     after stripping are ignored.
     """
-    _validate_not_empty(sep)
+    _validate_sep_arg(sep)
     item_strs = _get_item_strs(text, sep, strip)
-    items: list[T] = []
+    items: list[Any] = []
     for item_str in item_strs:
         if item_str != "" or not strip:
-            items.append(_convert_str(text, converter))
+            items.append(converter(text))
     return items
 
 
@@ -188,16 +186,17 @@ def str_from_mapping(
     (default is ":"), then each entry is separated by a separator
     string (default is newline).
     """
-    _validate_not_empty(sep, link)
+    _validate_sep_arg(sep)
+    _validate_link_arg(link)
     return sep.join(f"{key}{link}{value}" for key, value in items.items())
 
 
 # Lint: Larger number of arguments is required for this method.
 # pylint: disable=too-many-arguments
-def str_to_dict[K, T](
+def str_to_dict(
     text: str, *, sep: str = "\n", link: str = ":",
-    key_converter: Callable[[str], K] | None = None,
-    value_converter: Callable[[str], T] | None = None, strip: bool = True
+    key_converter: Callable[[str], Any] | None = None,
+    value_converter: Callable[[str], Any] | None = None, strip: bool = True
 ) -> dict[Any, Any]:
     """
     Convert a simple separated string into a dict.
@@ -220,173 +219,43 @@ def str_to_dict[K, T](
     string is present, but either the key or the value is empty,
     conversion will still be attempted on the empty key or value.
     """
-    _validate_not_empty(sep, link)
+    _validate_sep_arg(sep)
+    _validate_link_arg(link)
     item_strs = _get_item_strs(text, sep, strip)
-    items: dict[K, T] = {}
+    items: dict[Any, Any] = {}
     for item_str in item_strs:
         if not item_str and strip:
             continue
+        _validate_contains_link(link, item_str)
         link_index = item_str.find(link)
-        if link_index == -1:
-            raise ValueError(
-                f"Entry {item_str!r} does not contain link string {link!r}."
-            )
         key_str = item_str[:link_index]
         value_str = item_str[link_index + len(link):]
         if strip:
             key_str = key_str.strip()
             value_str = value_str.strip()
-        key = _convert_str(key_str, key_converter)
-        items[key] = _convert_str(value_str, value_converter)
+        key = key_converter(key_str)
+        items[key] = value_converter(value_str)
     return items
 
 
-def str_is_none(text: str, *, allow_empty: bool = True) -> bool:
-    """
-    Determine if a string represents a None value.
-
-    The strings "none" and "null", ignoring case and surrounding
-    whitespace, are always recognized as None values.  If allow_empty is
-    True (default), an empty or whitespace-only string is also
-    recognized as a None value.
-    """
-    normalized_text = text.strip().lower()
-    return (
-        normalized_text in ("none", "null")
-        or (allow_empty and not normalized_text)
-    )
-
-
-def str_is_bool(text: str) -> bool:
-    """
-    Determine if a string represents a Boolean value.
-
-    The strings "true" and "false", ignoring case and surrounding
-    whitespace, are always recognized as Boolean values.
-    """
-    return text.strip().lower() in ("true", "false")
-
-
-def str_is_int(text: str, *, base: int | None = None) -> bool:
-    """
-    Determine if a string represents an integer value.
-
-    If base is specified as a nonzero value, that number base is used to
-    interpret the string. If base is None (default) or zero,
-    Python-style prefixes are recognized for binary, octal, and
-    hexadecimal values.  If no such prefix is present, the value is
-    interpreted as a decimal integer (base 10).
-    """
-    try:
-        _str_to_int(text, base)
-    except ValueError:
-        return False
-    return True
-
-
-def str_is_float(
-        text: str, *, allow_non_finite: bool = True, allow_int: bool = False,
-) -> bool:
-    """
-    Determine if a string represents a float value.
-
-    If allow_non_finite is True (default), special floating-point
-    representations such as "-inf", "+inf", and "nan" are recognized as
-    float values.  Otherwise, only finite floating-point values are
-    recognized.
-
-    If allow_int is False (default), and the string represents a base-10
-    integer, then it will not be recognized as a floating-point value.
-    Set this option to True if ints should be accepted as floats.
-    """
-    if not allow_int:
-        try:
-            int(text)
-        except ValueError:
-            pass
-        else:
-            return False
-    try:
-        value = float(text)
-    except ValueError:
-        return False
-    return allow_non_finite or math.isfinite(value)
-
-
-def str_type(
-        text: str, *, empty_is_none: bool = True, int_base: int | None = None,
-        allow_non_finite_float: bool = True
-) -> type:
-    """
-    Infer the basic Python type represented by a string.
-
-    The type is determined by testing for None, bool, int, and float
-    values in that order.  Strings that do not represent one of these
-    types are inferred as str.
-
-    If empty_is_none is True (default), empty and whitespace-only
-    strings are also inferred as NoneType.
-
-    If int_base is specified as a nonzero value, that number base is
-    used to interpret the string.  If int_base is None (default) or
-    zero, Python-style prefixes are recognized first, and if no prefix
-    is present, the value is interpreted as a decimal integer (base 10).
-
-    If allow_non_finite_float is True (default), special floating-point
-    representations such as "-inf", "+inf", and "nan" are recognized as
-    float values.
-    """
-    if str_is_none(text, allow_empty=empty_is_none):
-        return NoneType
-    if str_is_bool(text):
-        return bool
-    if str_is_int(text, base=int_base):
-        return int
-    if str_is_float(text, allow_non_finite=allow_non_finite_float):
-        return float
-    return str
-
-
-def str_cast(
-        text: str, *, empty_is_none: bool = True, int_base: int | None = None,
-        allow_non_finite_float: bool = True
-) -> bool | int | float | str | None:
-    """
-    Cast a string to the inferred basic Python type it represents.
-
-    The type is determined by testing for None, bool, int, and float
-    values in that order.  Strings that do not represent one of these
-    types are returned unchanged as type str.
-
-    If empty_is_none is True (default), empty and whitespace-only
-    strings are converted to None.
-
-    If int_base is specified as a nonzero value, that number base is
-    used to interpret the string.  If int_base is None (default) or
-    zero, Python-style prefixes are recognized first, and if no prefix
-    is present, the value is interpreted as a decimal integer (base 10).
-
-    If allow_non_finite_float is True (default), special floating-point
-    representations such as "-inf", "+inf", and "nan" are recognized as
-    float values.
-    """
-    if str_is_none(text, allow_empty=empty_is_none):
-        return None
-    if str_is_bool(text):
-        return text.strip().lower() == "true"
-    if str_is_int(text, base=int_base):
-        return _str_to_int(text, int_base)
-    if str_is_float(text, allow_non_finite=allow_non_finite_float):
-        return float(text)
-    return text
-
-
-def _validate_not_empty(sep: str, link: str | None = None) -> None:
-    """Confirm that conversion string arguments are not empty."""
-    if not sep:
+def _validate_sep_arg(value: str) -> None:
+    """Confirm that conversion argument 'sep' is valid."""
+    if not value:
         raise ValueError("Argument 'sep' cannot be an empty string.")
-    if link is not None and not link:
+
+
+def _validate_link_arg(value: str) -> None:
+    """Confirm that conversion argument 'link' is valid."""
+    if not value:
         raise ValueError("Argument 'link' cannot be an empty string.")
+
+
+def _validate_contains_link(link: str, value: str) -> None:
+    """Confirm that mapping entry contains the specified link string."""
+    if link not in value:
+        raise ValueError(
+            f"Entry {value!r} does not contain link string {link!r}."
+        )
 
 
 def _get_item_strs(text: str, sep: str, strip: bool) -> Iterator[str]:
@@ -400,35 +269,3 @@ def _get_item_strs(text: str, sep: str, strip: bool) -> Iterator[str]:
         item_str.strip() if strip else item_str
         for item_str in split_item_strs
     )
-
-
-def _str_to_int(text: str, base: int | None) -> int:
-    """
-    Convert a string to an integer value.
-
-    Raises ValueError if int conversion is not possible for the
-    specified text and integer base.
-    """
-    if base is not None and base != 0:
-        return int(text, base)
-    try:
-        return int(text, 0)
-    except ValueError:
-        return int(text, 10)
-
-
-def _convert_str[T](text: str, converter: Callable[[str], T] | None) -> T:
-    """
-    Convert a string according to the specified converter.
-
-    If no converter is specified (None), the original string is
-    returned.  If the bool converter is specified, True is returned only
-    if the string is "true", ignoring case or any whitespace.  Otherwise
-    the specified type converter is applied and the converted value is
-    returned.
-    """
-    if converter is None:
-        return text
-    if converter is bool:
-        return text.strip().lower() == "true"
-    return converter(text)
