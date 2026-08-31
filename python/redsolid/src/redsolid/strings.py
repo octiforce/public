@@ -171,7 +171,7 @@ def str_to_list(
     items: list[Any] = []
     for item_str in item_strs:
         if item_str != "" or not strip:
-            items.append(converter(text))
+            items.append(converter(item_str))
     return items
 
 
