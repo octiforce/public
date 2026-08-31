@@ -21,7 +21,7 @@ def test_str_from_iterable() -> None:
 
 
 def test_str_to_list() -> None:
-    assert str_to_list("None\nTrue") == ["None", "True"]
+    assert str_to_list("1\n2\n3") == ["1", "2", "3"]
   # assert str_to_list(" True : true: False: 0 ", sep=":", converter=bool) == [
     #     True, True, False, False
     # ]
