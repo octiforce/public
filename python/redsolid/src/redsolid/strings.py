@@ -12,19 +12,33 @@ class Indenter:
     """
     Indents strings and tracks indentation level for nested output.
 
-    Indenters are initialized with default indenting step text (4 spaces
-    unless specified).  The push() and pop() methods add or remove one
-    or more indent levels.  The indent() method will return a string
-    that is prefixed with the indentation steps.
+    Indenters can use separate step text for continuing and ending
+    indentation (both step types are 4 spaces by default).  The push()
+    and pop() methods add or remove one or more indent levels.  The
+    indent() method returns a string prefixed with the indentation
+    steps.
     """
 
-    def __init__(self, *, default_step: str = "    ") -> None:
+    @staticmethod
+    def _validate_not_empty(name: str, value: str) -> None:
+        """Confirm that argument is not an empty string."""
+        if not value:
+            raise ValueError(f"Argument {name!r} cannot be an empty string.")
+
+    @staticmethod
+    def _validate_positive(name: str, value: int) -> None:
+        """Confirm that argument is greater than zero."""
+        if value <= 0:
+            raise ValueError(f"Argument {name!r} must be greater than zero.")
+
+    def __init__(
+            self, *, continue_step: str = "    ", end_step: str = "    "
+    ) -> None:
         """Initialize the indenter."""
-        if not default_step:
-            raise ValueError(
-                "Argument 'default_step' cannot be an empty string."
-            )
-        self._default_step = default_step
+        self._validate_not_empty("continue_step", continue_step)
+        self._validate_not_empty("end_step", end_step)
+        self._continue_step = continue_step
+        self._end_step = end_step
         self._steps: list[str] = []
         self._prefix = ""
 
@@ -32,8 +46,9 @@ class Indenter:
     def __repr__(self) -> str:
         """Get a debug string representation."""
         return (
-            f"{type(self).__name__}(default_step={self.default_step!r}, "
-            f"steps={self.steps!r}, prefix={self.prefix!r})"
+            f"{type(self).__name__}(continue_step={self._continue_step!r}, "
+            f"end_step={self.end_step!r}, steps={self.steps!r}, "
+            f"prefix={self.prefix!r})"
         )
 
     @override
@@ -42,9 +57,14 @@ class Indenter:
         return self._prefix
 
     @property
-    def default_step(self) -> str:
-        """Get the default step text used for one indent level."""
-        return self._default_step
+    def continue_step(self) -> str:
+        """Get the step text used for continuing indentation."""
+        return self._continue_step
+
+    @property
+    def end_step(self) -> str:
+        """Get the default step text used for ending indentation."""
+        return self._end_step
 
     @property
     def steps(self) -> tuple[str, ...]:
@@ -58,7 +78,7 @@ class Indenter:
 
     @property
     def prefix(self) -> str:
-        """Get the combined text of steps for current indentation."""
+        """Get the combined text of the current indentation steps."""
         return self._prefix
 
     def push(
@@ -67,20 +87,20 @@ class Indenter:
         """
         Increase (push) the indentation level by one or more steps.
 
-        By default, the indentation is increased by one step.  The
-        default step text is used for indenting the new level(s) unless
-        a custom step is specified.
+        By default, the indentation is increased by one step using the
+        default end step text.  If a custom step is specified, it is
+        applied to the new level(s), and the custom text persists until
+        those levels are popped.
         """
-        if step_count <= 0:
-            raise ValueError(
-                "Argument 'step_count' must be greater than zero."
-            )
-        if custom_step == "":
-            raise ValueError(
-                "Argument 'custom_step' cannot be an empty string."
-            )
-        step = self._default_step if custom_step is None else custom_step
-        self._steps.extend([step] * step_count)
+        self._validate_positive("step_count", step_count)
+        if custom_step is not None:
+            self._validate_not_empty("custom_step", custom_step)
+        continue_step = (
+            self._continue_step if custom_step is None else custom_step
+        )
+        end_step = self._end_step if custom_step is None else custom_step
+        self._steps.extend([continue_step] * (step_count - 1))
+        self._steps.append(end_step)
         self._prefix = "".join(self._steps)
 
     def pop(self, *, step_count: int = 1) -> None:
@@ -90,10 +110,7 @@ class Indenter:
         By default, the indentation is decreased by one step.  Raises
         ValueError if step_count exceeds the current indentation level.
         """
-        if step_count <= 0:
-            raise ValueError(
-                "Argument 'step_count' must be greater than zero."
-            )
+        self._validate_positive("step_count", step_count)
         if step_count > self.level:
             raise ValueError(
                 f"Attempted to pop {step_count} indent step(s), but current "
@@ -102,7 +119,7 @@ class Indenter:
         del self._steps[-step_count:]
         self._prefix = "".join(self._steps)
 
-    def indent(self, value: Any) -> str:
+    def indent(self, value: object) -> str:
         """
         Format a value with the current indentation prefix.
 
@@ -120,16 +137,23 @@ class Indenter:
         return result
 
     @contextmanager
-    def indented(
+    def pushed(
             self, *, step_count: int = 1, custom_step: str | None = None
     ) -> Generator[Indenter, None, None]:
         """
         Temporarily increase the indentation level by one or more steps.
 
-        Prior indentation is automatically restored when the context is
-        exited, including if an exception occurs.
+        This method is a context manager for use with the 'with'
+        statement.  The previous indentation level is automatically
+        restored when the context is exited, including if an exception
+        occurs.
+
+        By default, the indentation is increased by one step using the
+        default end step text.  If a custom step is specified, it is
+        applied to the new level(s), and the custom text persists until
+        those levels are popped.
         """
-        self.push(custom_step=custom_step, step_count=step_count)
+        self.push(step_count=step_count, custom_step=custom_step)
         try:
             yield self
         finally:
