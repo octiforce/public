@@ -42,6 +42,14 @@ class Indenter:
         self._steps: list[str] = []
         self._prefix = ""
 
+    def __call__(self, value: object) -> str:
+        """
+        Format a value with the current indentation prefix.
+
+        This method is a shortcut for calling the indent() method.
+        """
+        return self.indent(value)
+
     @override
     def __repr__(self) -> str:
         """Get a debug string representation."""
